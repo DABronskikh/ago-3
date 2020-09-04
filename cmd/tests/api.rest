@@ -1,0 +1,77 @@
+### Получение токена под service'ом
+
+POST http://localhost:8080/tokens
+Content-Type: application/json
+
+{
+  "login": "service",
+  "password": "secret"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 201, "Response status is not 201");
+  client.assert(response.contentType.mimeType === "application/json", "Expected 'application/json' but received '" + response.contentType.mimeType + "'");
+  client.global.set("token", response.body.token);
+});
+%}
+
+### Добавление/обновление записи по user_id
+
+POST http://localhost:8080/operations
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "user_id": 2,
+  "operations": [
+    {
+      "icon": "icon-5",
+      "title": "title",
+      "url": "url"
+    },{
+      "icon": "icon-6",
+      "title": "title",
+      "url": "url"
+    }
+  ]
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.contentType.mimeType === "application/json", "Expected 'application/json' but received '" + response.contentType.mimeType + "'");
+});
+%}
+
+### Получение токена под user'ом
+
+POST http://localhost:8080/tokens
+Content-Type: application/json
+
+{
+  "login": "user",
+  "password": "secret"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 201, "Response status is not 201");
+  client.assert(response.contentType.mimeType === "application/json", "Expected 'application/json' but received '" + response.contentType.mimeType + "'");
+  client.global.set("token", response.body.token);
+});
+%}
+
+### Запрос списока частых платежей
+
+GET http://localhost:8080/operations
+Authorization: {{token}}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.contentType.mimeType === "application/json", "Expected 'application/json' but received '" + response.contentType.mimeType + "'");
+});
+%}
+
+###
